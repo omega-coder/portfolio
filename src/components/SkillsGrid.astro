@@ -1,0 +1,123 @@
+---
+const skillCategories = [
+  {
+    name: 'Security',
+    icon: '🛡',
+    color: '#00ff88',
+    skills: [
+      { name: 'Burp Suite', level: 90 },
+      { name: 'Metasploit', level: 80 },
+      { name: 'Wireshark', level: 85 },
+      { name: 'Nmap', level: 92 },
+      { name: 'OWASP', level: 88 },
+      { name: 'Ghidra', level: 65 },
+      { name: 'SQLMap', level: 82 },
+      { name: 'Gobuster', level: 88 },
+    ],
+  },
+  {
+    name: 'Cloud',
+    icon: '☁',
+    color: '#00d4ff',
+    skills: [
+      { name: 'AWS', level: 82 },
+      { name: 'GCP', level: 70 },
+      { name: 'Terraform', level: 78 },
+      { name: 'Ansible', level: 75 },
+      { name: 'Cloudflare', level: 85 },
+      { name: 'Vault (HashiCorp)', level: 68 },
+    ],
+  },
+  {
+    name: 'DevOps',
+    icon: '⚙',
+    color: '#fbbf24',
+    skills: [
+      { name: 'Docker', level: 92 },
+      { name: 'Kubernetes', level: 78 },
+      { name: 'CI/CD', level: 85 },
+      { name: 'GitHub Actions', level: 88 },
+      { name: 'Linux', level: 95 },
+      { name: 'Nginx', level: 88 },
+      { name: 'Prometheus', level: 72 },
+      { name: 'Grafana', level: 75 },
+    ],
+  },
+  {
+    name: 'Languages',
+    icon: '</> ',
+    color: '#a855f7',
+    skills: [
+      { name: 'Python', level: 90 },
+      { name: 'Bash', level: 88 },
+      { name: 'Go', level: 65 },
+      { name: 'JavaScript', level: 75 },
+      { name: 'Rust', level: 45 },
+      { name: 'SQL', level: 82 },
+    ],
+  },
+];
+---
+
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+  {skillCategories.map(category => (
+    <div
+      class="rounded-xl border border-[#2a2a4a] p-6 hover:border-[#3a3a5a] transition-colors"
+      style="background: #0f0f1e;"
+    >
+      <!-- Category header -->
+      <div class="flex items-center gap-2 mb-5">
+        <span class="text-xl">{category.icon}</span>
+        <h3
+          class="font-mono font-bold text-base"
+          style={`color: ${category.color}; text-shadow: 0 0 8px ${category.color}40;`}
+        >
+          {category.name}
+        </h3>
+      </div>
+
+      <!-- Skills list -->
+      <div class="space-y-3">
+        {category.skills.map(skill => (
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <span class="font-mono text-sm text-[#e2e8f0]">{skill.name}</span>
+              <span class="font-mono text-xs text-[#4a4a6a]">{skill.level}%</span>
+            </div>
+            <div class="h-1 rounded-full overflow-hidden" style="background: #2a2a4a;">
+              <div
+                class="h-full rounded-full skill-bar"
+                data-width={skill.level}
+                style={`width: 0%; background: linear-gradient(90deg, ${category.color}, ${category.color}88); transition: width 1.2s ease;`}
+              ></div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  ))}
+</div>
+
+<script>
+  // Animate skill bars on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.querySelectorAll('.skill-bar').forEach(bar => {
+          const width = bar.getAttribute('data-width');
+          if (width) {
+            setTimeout(() => {
+              (bar as HTMLElement).style.width = `${width}%`;
+            }, 100);
+          }
+        });
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.2 });
+
+  document.querySelectorAll('[data-width]').forEach(bar => {
+    const parent = bar.closest('.rounded-xl');
+    if (parent) observer.observe(parent);
+  });
+</script>

@@ -1,0 +1,120 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TerminalHero from '../components/TerminalHero.astro';
+import BlogCard from '../components/BlogCard.astro';
+import WriteupCard from '../components/WriteupCard.astro';
+import { getCollection, render } from 'astro:content';
+
+const allPosts = await getCollection('blog', ({ data }) => !data.draft);
+const allWriteups = await getCollection('writeups', ({ data }) => !data.draft);
+
+const latestPosts = allPosts
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 3);
+
+const latestWriteups = allWriteups
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 3);
+
+function estimateReadingTime(body: string): number {
+  const words = body?.split(/\s+/).length ?? 0;
+  return Math.max(1, Math.ceil(words / 200));
+}
+---
+
+<BaseLayout
+  title="Yassine | Cybersecurity & DevOps Engineer"
+  description="Yassine — Cybersecurity Engineer & DevOps. CTF player, HackTheBox enthusiast, cloud infrastructure architect."
+>
+  <!-- Hero -->
+  <TerminalHero name="Yassine" />
+
+  <!-- Recent Blog Posts -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 py-20">
+    <div class="flex items-end justify-between mb-8">
+      <div>
+        <div class="font-mono text-xs text-[#00ff88] mb-1">// recent</div>
+        <h2 class="font-mono text-2xl font-bold text-[#e2e8f0]">Blog Posts</h2>
+      </div>
+      <a
+        href="/blog"
+        class="font-mono text-sm text-[#94a3b8] hover:text-[#00ff88] transition-colors flex items-center gap-1 group"
+      >
+        <span>view all</span>
+        <span class="group-hover:translate-x-1 transition-transform">→</span>
+      </a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      {latestPosts.map(post => (
+        <BlogCard
+          title={post.data.title}
+          description={post.data.description}
+          date={post.data.date}
+          tags={post.data.tags}
+          slug={post.id}
+          readingTime={estimateReadingTime(post.body ?? '')}
+        />
+      ))}
+    </div>
+  </section>
+
+  <!-- Recent Writeups -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 pb-20">
+    <div class="flex items-end justify-between mb-8">
+      <div>
+        <div class="font-mono text-xs text-[#a855f7] mb-1">// ctf</div>
+        <h2 class="font-mono text-2xl font-bold text-[#e2e8f0]">CTF Writeups</h2>
+      </div>
+      <a
+        href="/writeups"
+        class="font-mono text-sm text-[#94a3b8] hover:text-[#a855f7] transition-colors flex items-center gap-1 group"
+      >
+        <span>view all</span>
+        <span class="group-hover:translate-x-1 transition-transform">→</span>
+      </a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      {latestWriteups.map(writeup => (
+        <WriteupCard
+          title={writeup.data.title}
+          description={writeup.data.description}
+          date={writeup.data.date}
+          tags={writeup.data.tags}
+          slug={writeup.id}
+          platform={writeup.data.platform}
+          difficulty={writeup.data.difficulty}
+          category={writeup.data.category}
+          points={writeup.data.points}
+        />
+      ))}
+    </div>
+  </section>
+
+  <!-- Quick links / contact teaser -->
+  <section
+    class="border-t border-[#2a2a4a] py-16"
+    style="background: linear-gradient(180deg, transparent, #0f0f1e);"
+  >
+    <div class="max-w-3xl mx-auto px-4 text-center">
+      <div class="font-mono text-xs text-[#00ff88] mb-2">// connect</div>
+      <h2 class="font-mono text-2xl font-bold text-[#e2e8f0] mb-3">
+        Let's work together
+      </h2>
+      <p class="text-[#94a3b8] mb-8">
+        Open to security consulting, DevOps projects, and CTF team collaborations.
+      </p>
+      <a
+        href="/contact"
+        class="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-mono text-sm font-semibold transition-all duration-200"
+        style="background: transparent; color: #00ff88; border: 1px solid #00ff8840;"
+        onmouseover="this.style.background='#00ff8810'; this.style.borderColor='#00ff88'; this.style.boxShadow='0 0 20px rgba(0,255,136,0.15)'"
+        onmouseout="this.style.background='transparent'; this.style.borderColor='rgba(0,255,136,0.25)'; this.style.boxShadow='none'"
+      >
+        <span>./contact.sh</span>
+        <span>→</span>
+      </a>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,140 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  date: Date;
+  tags?: string[];
+  readingTime?: number;
+  platform?: string;
+  difficulty?: string;
+  category?: string;
+  image?: string;
+}
+
+const {
+  title,
+  description,
+  date,
+  tags = [],
+  readingTime,
+  platform,
+  difficulty,
+  category,
+  image,
+} = Astro.props;
+
+const formattedDate = new Intl.DateTimeFormat('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+}).format(date);
+
+const difficultyColors: Record<string, string> = {
+  Easy: 'badge-easy',
+  Medium: 'badge-medium',
+  Hard: 'badge-hard',
+  Insane: 'badge-insane',
+};
+---
+
+<BaseLayout title={`${title} | Yassine`} description={description} image={image} type="article">
+  <!-- Reading progress bar -->
+  <div id="reading-progress" class="reading-progress" style="width: 0%"></div>
+
+  <article class="max-w-3xl mx-auto px-4 sm:px-6 py-16">
+    <!-- Back link -->
+    <a
+      href={platform ? '/writeups' : '/blog'}
+      class="inline-flex items-center gap-2 text-[#94a3b8] hover:text-[#00ff88] font-mono text-sm transition-colors mb-8 group"
+    >
+      <span class="group-hover:-translate-x-1 transition-transform">←</span>
+      <span>cd ..</span>
+    </a>
+
+    <!-- Header -->
+    <header class="mb-10">
+      <!-- Platform/category badges for writeups -->
+      {platform && (
+        <div class="flex flex-wrap items-center gap-2 mb-4">
+          <span class="tag-pill" style="background:#1a1a2e;border-color:#00d4ff;color:#00d4ff;">
+            {platform}
+          </span>
+          {difficulty && (
+            <span class={`tag-pill ${difficultyColors[difficulty] ?? ''}`}>
+              {difficulty}
+            </span>
+          )}
+          {category && (
+            <span class="tag-pill">
+              {category}
+            </span>
+          )}
+        </div>
+      )}
+
+      <h1 class="font-mono text-2xl sm:text-3xl font-bold text-[#e2e8f0] leading-tight mb-4">
+        {title}
+      </h1>
+
+      {description && (
+        <p class="text-[#94a3b8] text-base leading-relaxed mb-5">{description}</p>
+      )}
+
+      <!-- Meta row -->
+      <div class="flex flex-wrap items-center gap-4 text-sm text-[#94a3b8] font-mono border-b border-[#2a2a4a] pb-5">
+        <span class="flex items-center gap-1">
+          <span class="text-[#00ff88]">$</span>
+          <time datetime={date.toISOString()}>{formattedDate}</time>
+        </span>
+        {readingTime && (
+          <span class="flex items-center gap-1">
+            <span class="text-[#00ff88]">~</span>
+            <span>{readingTime} min read</span>
+          </span>
+        )}
+      </div>
+
+      <!-- Tags -->
+      {tags.length > 0 && (
+        <div class="flex flex-wrap gap-2 mt-4">
+          {tags.map(tag => (
+            <span class="tag-pill">{tag}</span>
+          ))}
+        </div>
+      )}
+    </header>
+
+    <!-- Content -->
+    <div class="prose prose-invert max-w-none">
+      <slot />
+    </div>
+
+    <!-- Footer nav -->
+    <div class="mt-16 pt-8 border-t border-[#2a2a4a]">
+      <a
+        href={platform ? '/writeups' : '/blog'}
+        class="inline-flex items-center gap-2 text-[#94a3b8] hover:text-[#00ff88] font-mono text-sm transition-colors group"
+      >
+        <span class="group-hover:-translate-x-1 transition-transform">←</span>
+        <span>Back to {platform ? 'writeups' : 'blog'}</span>
+      </a>
+    </div>
+  </article>
+</BaseLayout>
+
+<script>
+  // Reading progress bar
+  const progressBar = document.getElementById('reading-progress');
+  if (progressBar) {
+    const updateProgress = () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      progressBar.style.width = `${Math.min(progress, 100)}%`;
+    };
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    updateProgress();
+  }
+</script>

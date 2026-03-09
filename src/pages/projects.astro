@@ -1,0 +1,134 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+
+const projects = [
+  {
+    title: 'SecureScan — Web Vulnerability Scanner',
+    description: 'A fast, concurrent web vulnerability scanner built in Python. Detects XSS, SQLi, SSRF, open redirects, and misconfigured headers. Pluggable architecture for custom payloads.',
+    tags: ['Python', 'asyncio', 'aiohttp', 'Click', 'Security'],
+    github: 'https://github.com/omega-coder/securescan',
+    category: 'security',
+    featured: true,
+  },
+  {
+    title: 'k8s-hardener — Kubernetes Security Auditor',
+    description: 'CLI tool that audits Kubernetes clusters against CIS benchmarks. Checks RBAC misconfiguration, pod security policies, network policies, and exposed secrets. Outputs JSON/HTML reports.',
+    tags: ['Go', 'Kubernetes', 'CIS', 'RBAC', 'DevSecOps'],
+    github: 'https://github.com/omega-coder/k8s-hardener',
+    category: 'devops',
+    featured: true,
+  },
+  {
+    title: 'ThreatIntel Pipeline — IOC Aggregator',
+    description: 'Automated threat intelligence pipeline that ingests IOCs from MISP, OTX, and Shodan, correlates them, and pushes alerts to Slack and PagerDuty. Runs on AWS Lambda + EventBridge.',
+    tags: ['Python', 'AWS Lambda', 'MISP', 'Terraform', 'Security'],
+    github: 'https://github.com/omega-coder/threat-intel-pipeline',
+    demo: 'https://threatintel.yassine.sh',
+    category: 'cloud',
+    featured: false,
+  },
+  {
+    title: 'CTF-Toolkit — Automation Framework',
+    description: 'Personal CTF automation framework with scripts for steganography, crypto challenges, binary exploitation, and web hacking. Includes a Docker-based challenge environment.',
+    tags: ['Python', 'Docker', 'pwntools', 'Cryptography', 'CTF'],
+    github: 'https://github.com/omega-coder/ctf-toolkit',
+    category: 'ctf',
+    featured: false,
+  },
+  {
+    title: 'CloudGuard — IaC Security Linter',
+    description: 'Lints Terraform and CloudFormation templates for security misconfigurations before deployment. Integrates with GitHub Actions for shift-left security in CI/CD pipelines.',
+    tags: ['Python', 'Terraform', 'CloudFormation', 'GitHub Actions', 'IaC'],
+    github: 'https://github.com/omega-coder/cloudguard',
+    category: 'cloud',
+    featured: false,
+  },
+  {
+    title: 'LogHunter — SIEM Log Analyzer',
+    description: 'Real-time log analysis engine that parses syslog, nginx, and cloud trail logs for anomalies and IOCs. Ships with pre-built detection rules inspired by Sigma.',
+    tags: ['Python', 'Elasticsearch', 'Sigma', 'Grafana', 'SIEM'],
+    github: 'https://github.com/omega-coder/loghunter',
+    category: 'security',
+    featured: false,
+  },
+];
+
+const categories = ['all', 'security', 'devops', 'cloud', 'ctf', 'tools'];
+---
+
+<BaseLayout
+  title="Projects | Yassine"
+  description="Security tools, DevOps automation, and CTF utilities built by Yassine."
+>
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-16">
+    <!-- Header -->
+    <div class="mb-12">
+      <div class="font-mono text-xs text-[#00ff88] mb-2">// ls -la projects/</div>
+      <h1 class="font-mono text-3xl sm:text-4xl font-bold text-[#e2e8f0] mb-4">Projects</h1>
+      <p class="text-[#94a3b8] max-w-xl">
+        Security tools, infrastructure automation, and CTF utilities.
+        Most of these came from a real need — or a rabbit hole at 2am.
+      </p>
+    </div>
+
+    <!-- Filter tabs -->
+    <div class="flex flex-wrap gap-2 mb-10" id="filter-container">
+      {categories.map(cat => (
+        <button
+          data-filter={cat}
+          class:list={['tag-pill cursor-pointer', { active: cat === 'all' }]}
+        >
+          {cat === 'all' ? '* all' : cat}
+        </button>
+      ))}
+    </div>
+
+    <!-- Projects grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5" id="projects-grid">
+      {projects.map(project => (
+        <div
+          data-category={project.category}
+          class="project-card"
+        >
+          <ProjectCard {...project} />
+        </div>
+      ))}
+    </div>
+
+    <!-- Empty state -->
+    <div id="empty-state" class="hidden text-center py-20">
+      <div class="font-mono text-[#4a4a6a] text-sm">
+        <span class="text-[#00ff88]">$</span> find . -category "{'{category}'}" -type project<br />
+        <span class="text-[#94a3b8]">find: no results found</span>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  const filterBtns = document.querySelectorAll('[data-filter]');
+  const cards = document.querySelectorAll('.project-card');
+  const emptyState = document.getElementById('empty-state');
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const filter = btn.getAttribute('data-filter') ?? 'all';
+
+      // Update active state
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      // Filter cards
+      let visible = 0;
+      cards.forEach(card => {
+        const category = card.getAttribute('data-category');
+        const show = filter === 'all' || category === filter;
+        (card as HTMLElement).style.display = show ? '' : 'none';
+        if (show) visible++;
+      });
+
+      emptyState?.classList.toggle('hidden', visible > 0);
+    });
+  });
+</script>

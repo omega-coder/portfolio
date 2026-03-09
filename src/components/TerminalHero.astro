@@ -1,0 +1,350 @@
+---
+interface Props {
+  name?: string;
+  roles?: string[];
+}
+
+const {
+  name = 'Yassine',
+  roles = [
+    'Cybersecurity Engineer',
+    'DevOps Engineer',
+    'CTF Player',
+    'Cloud Architect',
+  ],
+} = Astro.props;
+---
+
+<section class="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
+  <!-- Animated grid background -->
+  <div class="absolute inset-0 grid-bg opacity-40"></div>
+
+  <!-- Matrix digital rain canvas -->
+  <canvas
+    id="matrix-canvas"
+    class="absolute inset-0 w-full h-full pointer-events-none"
+    style="opacity: 0.55; mix-blend-mode: normal;"
+  ></canvas>
+
+  <!-- Floating particles -->
+  <div id="particles-container" class="absolute inset-0 overflow-hidden pointer-events-none">
+    {Array.from({ length: 20 }).map((_, i) => (
+      <div
+        class="particle absolute w-1 h-1 rounded-full bg-[#00ff88]"
+        style={`
+          left: ${Math.random() * 100}%;
+          animation: float-particle ${12 + Math.random() * 15}s linear ${Math.random() * 10}s infinite;
+          opacity: ${0.3 + Math.random() * 0.4};
+          width: ${1 + Math.random() * 2}px;
+          height: ${1 + Math.random() * 2}px;
+        `}
+      ></div>
+    ))}
+  </div>
+
+  <!-- Radial glow -->
+  <div
+    class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full pointer-events-none"
+    style="background: radial-gradient(circle, rgba(0,255,136,0.04) 0%, transparent 70%);"
+  ></div>
+
+  <!-- Terminal window -->
+  <div class="relative z-10 w-full max-w-3xl mx-auto px-4">
+    <!-- Terminal chrome -->
+    <div
+      class="rounded-xl overflow-hidden"
+      style="background: #0f0f1e; border: 1px solid #2a2a4a; box-shadow: 0 25px 80px rgba(0,0,0,0.6), 0 0 40px rgba(0,255,136,0.06);"
+    >
+      <!-- Title bar -->
+      <div class="flex items-center gap-2 px-4 py-3 border-b border-[#2a2a4a]"
+           style="background: #1a1a2e;">
+        <span class="w-3 h-3 rounded-full bg-[#ff5f56]"></span>
+        <span class="w-3 h-3 rounded-full bg-[#ffbd2e]"></span>
+        <span class="w-3 h-3 rounded-full bg-[#27c93f]"></span>
+        <span class="flex-1 text-center font-mono text-xs text-[#4a4a6a]">
+          yassine@sec-lab:~
+        </span>
+      </div>
+
+      <!-- Terminal body -->
+      <div class="p-6 sm:p-8 font-mono text-sm sm:text-base leading-relaxed">
+        <!-- whoami line -->
+        <div class="flex items-center gap-2 mb-2">
+          <span class="text-[#00ff88]">┌──(</span>
+          <span class="text-[#00d4ff]">yassine</span>
+          <span class="text-[#00ff88]">@sec-lab</span>
+          <span class="text-[#00ff88]">)-[</span>
+          <span class="text-[#e2e8f0]">~</span>
+          <span class="text-[#00ff88]">]</span>
+        </div>
+        <div class="flex items-center gap-2 mb-4">
+          <span class="text-[#00ff88]">└─</span>
+          <span class="text-[#94a3b8]">$</span>
+          <span class="text-[#e2e8f0] ml-1">whoami</span>
+        </div>
+
+        <!-- Name output -->
+        <div class="mb-6 pl-4">
+          <span
+            id="typed-name"
+            class="text-3xl sm:text-4xl font-bold text-[#00ff88]"
+            style="text-shadow: 0 0 15px rgba(0,255,136,0.5), 0 0 30px rgba(0,255,136,0.3);"
+          ></span>
+          <span id="name-cursor" class="text-[#00ff88] text-3xl sm:text-4xl font-bold animate-[blink_1s_step-end_infinite]">▋</span>
+        </div>
+
+        <!-- Roles line -->
+        <div class="flex items-center gap-2 mb-2">
+          <span class="text-[#00ff88]">└─</span>
+          <span class="text-[#94a3b8]">$</span>
+          <span class="text-[#e2e8f0] ml-1">cat roles.txt</span>
+        </div>
+
+        <!-- Roles typewriter -->
+        <div class="pl-4 mb-6 min-h-[1.5em]">
+          <span id="typed-role" class="text-[#00d4ff] text-lg sm:text-xl font-semibold"></span>
+          <span id="role-cursor" class="text-[#00d4ff] animate-[blink_1s_step-end_infinite] hidden">▋</span>
+        </div>
+
+        <!-- Stats line -->
+        <div class="flex items-center gap-2 mb-3">
+          <span class="text-[#00ff88]">└─</span>
+          <span class="text-[#94a3b8]">$</span>
+          <span class="text-[#e2e8f0] ml-1">cat stats.json</span>
+        </div>
+
+        <!-- Stats output -->
+        <div id="stats-block" class="pl-4 text-sm opacity-0 transition-opacity duration-500">
+          <div class="text-[#94a3b8]">{`{`}</div>
+          <div class="pl-4">
+            <span class="text-[#00d4ff]">"ctf_solves"</span>
+            <span class="text-[#94a3b8]">: </span>
+            <span class="text-[#fbbf24]">50+</span>
+            <span class="text-[#94a3b8]">,</span>
+          </div>
+          <div class="pl-4">
+            <span class="text-[#00d4ff]">"hackthebox"</span>
+            <span class="text-[#94a3b8]">: </span>
+            <span class="text-[#00ff88]">"Active"</span>
+            <span class="text-[#94a3b8]">,</span>
+          </div>
+          <div class="pl-4">
+            <span class="text-[#00d4ff]">"certs"</span>
+            <span class="text-[#94a3b8]">: </span>
+            <span class="text-[#fbbf24]">3</span>
+            <span class="text-[#94a3b8]">,</span>
+          </div>
+          <div class="pl-4">
+            <span class="text-[#00d4ff]">"status"</span>
+            <span class="text-[#94a3b8]">: </span>
+            <span class="text-[#00ff88]">"open_to_opportunities"</span>
+          </div>
+          <div class="text-[#94a3b8]">{`}`}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA buttons -->
+    <div id="cta-buttons" class="flex flex-col sm:flex-row gap-4 mt-8 justify-center opacity-0 transition-opacity duration-500">
+      <a
+        href="/projects"
+        class="group inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-mono text-sm font-semibold transition-all duration-200"
+        style="background: #00ff88; color: #0a0a0a; box-shadow: 0 0 20px rgba(0,255,136,0.3);"
+        onmouseover="this.style.boxShadow='0 0 30px rgba(0,255,136,0.5)'"
+        onmouseout="this.style.boxShadow='0 0 20px rgba(0,255,136,0.3)'"
+      >
+        <span>./view-projects</span>
+        <span class="group-hover:translate-x-1 transition-transform">→</span>
+      </a>
+
+      <a
+        href="/blog"
+        class="group inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-mono text-sm font-semibold transition-all duration-200"
+        style="background: transparent; color: #00d4ff; border: 1px solid #00d4ff40;"
+        onmouseover="this.style.borderColor='#00d4ff'; this.style.boxShadow='0 0 20px rgba(0,212,255,0.2)'"
+        onmouseout="this.style.borderColor='rgba(0,212,255,0.25)'; this.style.boxShadow='none'"
+      >
+        <span>cat blog.md</span>
+        <span class="group-hover:translate-x-1 transition-transform">→</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Connected nodes network effect
+  (function () {
+    const canvas = document.getElementById('matrix-canvas') as HTMLCanvasElement;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const NODE_COUNT = 60;
+    const CONNECTION_DIST = 160;
+    const NODE_SPEED = 0.3;
+
+    interface Node {
+      x: number; y: number;
+      vx: number; vy: number;
+      r: number;
+    }
+
+    let nodes: Node[] = [];
+    let w = 0, h = 0;
+
+    function resize() {
+      w = canvas.width = canvas.offsetWidth;
+      h = canvas.height = canvas.offsetHeight;
+    }
+
+    function init() {
+      nodes = Array.from({ length: NODE_COUNT }, () => ({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        vx: (Math.random() - 0.5) * NODE_SPEED,
+        vy: (Math.random() - 0.5) * NODE_SPEED,
+        r: 1.5 + Math.random() * 1.5,
+      }));
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, w, h);
+
+      // Update positions
+      for (const n of nodes) {
+        n.x += n.vx;
+        n.y += n.vy;
+        if (n.x < 0 || n.x > w) n.vx *= -1;
+        if (n.y < 0 || n.y > h) n.vy *= -1;
+      }
+
+      // Draw connections
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const dx = nodes[i].x - nodes[j].x;
+          const dy = nodes[i].y - nodes[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < CONNECTION_DIST) {
+            const alpha = (1 - dist / CONNECTION_DIST) * 0.5;
+            ctx.beginPath();
+            ctx.moveTo(nodes[i].x, nodes[i].y);
+            ctx.lineTo(nodes[j].x, nodes[j].y);
+            ctx.strokeStyle = `rgba(0, 255, 136, ${alpha})`;
+            ctx.lineWidth = 0.8;
+            ctx.stroke();
+          }
+        }
+      }
+
+      // Draw nodes
+      for (const n of nodes) {
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(0, 212, 255, 0.7)';
+        ctx.fill();
+      }
+
+      requestAnimationFrame(draw);
+    }
+
+    resize();
+    init();
+    draw();
+    window.addEventListener('resize', () => { resize(); init(); });
+  })();
+</script>
+
+<script define:vars={{ name, roles }}>
+  const typedName = document.getElementById('typed-name');
+  const nameCursor = document.getElementById('name-cursor');
+  const typedRole = document.getElementById('typed-role');
+  const roleCursor = document.getElementById('role-cursor');
+  const statsBlock = document.getElementById('stats-block');
+  const ctaButtons = document.getElementById('cta-buttons');
+
+  function typeText(element, text, speed = 80) {
+    return new Promise(resolve => {
+      let i = 0;
+      const interval = setInterval(() => {
+        element.textContent += text[i];
+        i++;
+        if (i >= text.length) {
+          clearInterval(interval);
+          resolve();
+        }
+      }, speed);
+    });
+  }
+
+  let roleIndex = 0;
+  let erasing = false;
+
+  async function cycleRoles() {
+    while (true) {
+      const role = roles[roleIndex % roles.length];
+      roleCursor.classList.remove('hidden');
+
+      // Type
+      for (const char of role) {
+        typedRole.textContent += char;
+        await new Promise(r => setTimeout(r, 60));
+      }
+
+      await new Promise(r => setTimeout(r, 1800));
+
+      // Erase
+      while (typedRole.textContent.length > 0) {
+        typedRole.textContent = typedRole.textContent.slice(0, -1);
+        await new Promise(r => setTimeout(r, 30));
+      }
+
+      roleIndex++;
+      await new Promise(r => setTimeout(r, 200));
+    }
+  }
+
+  async function init() {
+    // 1. Type name
+    await new Promise(r => setTimeout(r, 400));
+    await typeText(typedName, name, 70);
+    nameCursor.style.display = 'none';
+
+    await new Promise(r => setTimeout(r, 300));
+
+    // 2. Start role cycling
+    cycleRoles();
+
+    // 3. Show stats after a delay
+    await new Promise(r => setTimeout(r, 1000));
+    if (statsBlock) {
+      statsBlock.style.opacity = '1';
+    }
+
+    // 4. Show CTA buttons
+    await new Promise(r => setTimeout(r, 600));
+    if (ctaButtons) {
+      ctaButtons.style.opacity = '1';
+    }
+  }
+
+  init();
+</script>
+
+<style>
+  .particle {
+    background: #00ff88;
+    border-radius: 50%;
+  }
+
+  @keyframes float-particle {
+    0% { transform: translateY(100vh) scale(0); opacity: 0; }
+    5% { opacity: 0.6; }
+    95% { opacity: 0.4; }
+    100% { transform: translateY(-50px) scale(1.5); opacity: 0; }
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+</style>

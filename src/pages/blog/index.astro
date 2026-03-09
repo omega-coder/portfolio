@@ -1,0 +1,140 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BlogCard from '../../components/BlogCard.astro';
+import { getCollection } from 'astro:content';
+
+const allPosts = await getCollection('blog', ({ data }) => !data.draft);
+const sortedPosts = allPosts.sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+
+const allTags = [...new Set(allPosts.flatMap(p => p.data.tags))].sort();
+
+function estimateReadingTime(body: string): number {
+  const words = body?.split(/\s+/).length ?? 0;
+  return Math.max(1, Math.ceil(words / 200));
+}
+---
+
+<BaseLayout
+  title="Blog | Yassine"
+  description="Technical blog on cybersecurity, DevOps, cloud infrastructure, and system engineering."
+>
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-16">
+    <!-- Header -->
+    <div class="mb-12">
+      <div class="font-mono text-xs text-[#00ff88] mb-2">// cat blog/index.md</div>
+      <h1 class="font-mono text-3xl sm:text-4xl font-bold text-[#e2e8f0] mb-4">Blog</h1>
+      <p class="text-[#94a3b8] max-w-xl">
+        Technical deep-dives on security, DevOps, and infrastructure.
+        No fluff — just the bytes that matter.
+      </p>
+    </div>
+
+    <!-- Search + Filter row -->
+    <div class="flex flex-col sm:flex-row gap-4 mb-8">
+      <!-- Search -->
+      <div class="relative flex-1">
+        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[#4a4a6a] font-mono text-sm">$</span>
+        <input
+          id="search-input"
+          type="text"
+          placeholder=" grep -i ..."
+          class="w-full pl-8 pr-4 py-2.5 rounded-lg border border-[#2a2a4a] font-mono text-sm text-[#e2e8f0] focus:outline-none focus:border-[#00ff88] transition-colors"
+          style="background: #0f0f1e;"
+        />
+      </div>
+    </div>
+
+    <!-- Tag filters -->
+    <div class="flex flex-wrap gap-2 mb-10">
+      <button data-tag="all" class="tag-pill active cursor-pointer">* all</button>
+      {allTags.map(tag => (
+        <button data-tag={tag} class="tag-pill cursor-pointer">{tag}</button>
+      ))}
+    </div>
+
+    <!-- Post count -->
+    <div class="font-mono text-xs text-[#4a4a6a] mb-6" id="post-count">
+      {sortedPosts.length} posts found
+    </div>
+
+    <!-- Posts grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" id="posts-grid">
+      {sortedPosts.map(post => (
+        <div
+          class="post-item"
+          data-title={post.data.title.toLowerCase()}
+          data-desc={post.data.description.toLowerCase()}
+          data-tags={post.data.tags.join(',')}
+        >
+          <BlogCard
+            title={post.data.title}
+            description={post.data.description}
+            date={post.data.date}
+            tags={post.data.tags}
+            slug={post.id}
+            readingTime={estimateReadingTime(post.body ?? '')}
+          />
+        </div>
+      ))}
+    </div>
+
+    <!-- Empty state -->
+    <div id="empty-state" class="hidden text-center py-20">
+      <div class="font-mono text-sm">
+        <span class="text-[#00ff88]">$</span>
+        <span class="text-[#94a3b8]"> grep -r "results" . → No matches found</span>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  const searchInput = document.getElementById('search-input') as HTMLInputElement;
+  const tagBtns = document.querySelectorAll('[data-tag]');
+  const postItems = document.querySelectorAll('.post-item');
+  const countEl = document.getElementById('post-count');
+  const emptyState = document.getElementById('empty-state');
+
+  let activeTag = 'all';
+  let searchQuery = '';
+
+  function filterPosts() {
+    let visible = 0;
+
+    postItems.forEach(item => {
+      const title = item.getAttribute('data-title') ?? '';
+      const desc = item.getAttribute('data-desc') ?? '';
+      const tags = item.getAttribute('data-tags') ?? '';
+
+      const matchesSearch = !searchQuery ||
+        title.includes(searchQuery) ||
+        desc.includes(searchQuery) ||
+        tags.includes(searchQuery);
+
+      const matchesTag = activeTag === 'all' || tags.split(',').includes(activeTag);
+
+      const show = matchesSearch && matchesTag;
+      (item as HTMLElement).style.display = show ? '' : 'none';
+      if (show) visible++;
+    });
+
+    if (countEl) countEl.textContent = `${visible} post${visible !== 1 ? 's' : ''} found`;
+    emptyState?.classList.toggle('hidden', visible > 0);
+  }
+
+  searchInput?.addEventListener('input', e => {
+    searchQuery = (e.target as HTMLInputElement).value.toLowerCase().trim();
+    filterPosts();
+  });
+
+  tagBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      activeTag = btn.getAttribute('data-tag') ?? 'all';
+      tagBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      filterPosts();
+    });
+  });
+</script>

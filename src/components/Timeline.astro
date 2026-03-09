@@ -1,0 +1,102 @@
+---
+const events = [
+  {
+    year: '2024',
+    title: 'Senior DevOps & Security Engineer',
+    org: 'Current Position',
+    description: 'Cloud infrastructure security, CI/CD pipeline hardening, container security, IaC with Terraform.',
+    type: 'work',
+    color: '#00ff88',
+  },
+  {
+    year: '2023',
+    title: 'Cybersecurity Engineer',
+    org: 'Security Consulting',
+    description: 'Penetration testing, vulnerability assessments, threat modeling, and security architecture reviews.',
+    type: 'work',
+    color: '#00ff88',
+  },
+  {
+    year: '2022',
+    title: 'CompTIA Security+',
+    org: 'Certification',
+    description: 'Passed CompTIA Security+ — covering network security, cryptography, threat intelligence, and risk management.',
+    type: 'cert',
+    color: '#fbbf24',
+  },
+  {
+    year: '2021',
+    title: 'DevOps Engineer',
+    org: 'Tech Startup',
+    description: 'Kubernetes cluster management, multi-cloud infrastructure on AWS & GCP, GitOps workflows.',
+    type: 'work',
+    color: '#00ff88',
+  },
+  {
+    year: '2020',
+    title: 'AWS Solutions Architect – Associate',
+    org: 'Certification',
+    description: 'AWS SAA-C02 — VPC design, IAM, S3, EC2, Lambda, CloudFormation.',
+    type: 'cert',
+    color: '#fbbf24',
+  },
+  {
+    year: '2019',
+    title: 'Started CTF Competing',
+    org: 'AngstromCTF, INS\'hAck, Securinets',
+    description: 'Active CTF player — web, crypto, forensics, and misc challenges. Multiple top-50 finishes.',
+    type: 'ctf',
+    color: '#a855f7',
+  },
+  {
+    year: '2019',
+    title: 'B.S. Computer Engineering',
+    org: 'University',
+    description: 'Bachelor\'s degree in Computer Engineering with focus on systems, networks, and security.',
+    type: 'education',
+    color: '#00d4ff',
+  },
+];
+
+const typeIcon: Record<string, string> = {
+  work: '💼',
+  cert: '🏆',
+  ctf: '🚩',
+  education: '🎓',
+};
+---
+
+<div class="relative">
+  <!-- Vertical line -->
+  <div class="absolute left-4 top-0 bottom-0 w-px" style="background: linear-gradient(to bottom, #00ff88, #00d4ff, #a855f7, transparent);"></div>
+
+  <div class="space-y-8">
+    {events.map((event, i) => (
+      <div class="relative pl-12 animate-fade-up" style={`animation-delay: ${i * 0.1}s;`}>
+        <!-- Dot -->
+        <div
+          class="absolute left-0 top-1 w-8 h-8 rounded-full flex items-center justify-center text-sm border-2"
+          style={`background: #0f0f1e; border-color: ${event.color}; box-shadow: 0 0 8px ${event.color}60;`}
+        >
+          {typeIcon[event.type]}
+        </div>
+
+        <!-- Content -->
+        <div
+          class="rounded-xl border border-[#2a2a4a] p-5 hover:border-[#3a3a5a] transition-all hover:-translate-y-0.5"
+          style="background: #0f0f1e;"
+        >
+          <div class="flex items-start justify-between gap-4 mb-1">
+            <h3 class="font-mono font-bold text-[#e2e8f0] text-sm">{event.title}</h3>
+            <span
+              class="font-mono text-xs shrink-0 font-bold"
+              style={`color: ${event.color};`}
+            >{event.year}</span>
+          </div>
+          <div class="font-mono text-xs mb-2" style={`color: ${event.color}90;`}>{event.org}</div>
+          <p class="text-[#94a3b8] text-sm leading-relaxed">{event.description}</p>
+        </div>
+      </div>
+    ))}
+  </div>
+</div>

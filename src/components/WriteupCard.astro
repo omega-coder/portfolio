@@ -1,0 +1,108 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  date: Date;
+  tags: string[];
+  slug: string;
+  platform: string;
+  difficulty?: string;
+  category?: string;
+  points?: number;
+}
+
+const { title, description, date, tags, slug, platform, difficulty, category, points } = Astro.props;
+
+const formattedDate = new Intl.DateTimeFormat('en-US', {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+}).format(date);
+
+const difficultyClass: Record<string, string> = {
+  Easy: 'badge-easy',
+  Medium: 'badge-medium',
+  Hard: 'badge-hard',
+  Insane: 'badge-insane',
+};
+
+const platformColors: Record<string, string> = {
+  HackTheBox: '#9fff00',
+  TryHackMe: '#c11111',
+  PicoCTF: '#4299e1',
+  AngstromCTF: '#ed8936',
+  Securinets: '#a855f7',
+  INShAck: '#f59e0b',
+  HacklabESGI: '#00d4ff',
+  Other: '#94a3b8',
+};
+
+const platformColor = platformColors[platform] ?? '#94a3b8';
+---
+
+<article
+  class="group block rounded-xl border border-[#2a2a4a] card-hover overflow-hidden"
+  style="background: #0f0f1e;"
+>
+  <a href={`/writeups/${slug}`} class="block p-6">
+    <!-- Platform + difficulty row -->
+    <div class="flex items-center justify-between gap-2 mb-3">
+      <span
+        class="font-mono text-xs font-semibold px-2.5 py-0.5 rounded-full border"
+        style={`color: ${platformColor}; border-color: ${platformColor}40; background: ${platformColor}15;`}
+      >
+        {platform}
+      </span>
+
+      <div class="flex items-center gap-2">
+        {difficulty && (
+          <span class={`font-mono text-xs px-2 py-0.5 rounded-full ${difficultyClass[difficulty] ?? ''}`}>
+            {difficulty}
+          </span>
+        )}
+        {points && (
+          <span class="font-mono text-xs text-[#fbbf24]">{points}pts</span>
+        )}
+      </div>
+    </div>
+
+    <!-- Title -->
+    <h2 class="font-mono font-bold text-[#e2e8f0] text-base leading-tight group-hover:text-[#00ff88] transition-colors mb-2 line-clamp-2">
+      {title}
+    </h2>
+
+    <!-- Category -->
+    {category && (
+      <div class="text-xs font-mono text-[#00d4ff] mb-3">
+        [{category}]
+      </div>
+    )}
+
+    <!-- Description -->
+    <p class="text-[#94a3b8] text-sm leading-relaxed mb-4 line-clamp-2">
+      {description}
+    </p>
+
+    <!-- Tags -->
+    <div class="flex flex-wrap gap-1.5 mb-4">
+      {tags.slice(0, 3).map(tag => (
+        <span class="tag-pill">{tag}</span>
+      ))}
+      {tags.length > 3 && (
+        <span class="tag-pill">+{tags.length - 3}</span>
+      )}
+    </div>
+
+    <!-- Date -->
+    <div class="flex items-center gap-2 text-xs font-mono text-[#4a4a6a]">
+      <span class="text-[#00ff88]">$</span>
+      <time datetime={date.toISOString()}>{formattedDate}</time>
+    </div>
+  </a>
+
+  <!-- Bottom accent -->
+  <div
+    class="h-px w-0 group-hover:w-full transition-all duration-300"
+    style={`background: linear-gradient(90deg, ${platformColor}, #00d4ff);`}
+  ></div>
+</article>

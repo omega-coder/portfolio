@@ -1,0 +1,161 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SkillsGrid from '../components/SkillsGrid.astro';
+import Timeline from '../components/Timeline.astro';
+---
+
+<BaseLayout
+  title="About | Yassine"
+  description="Cybersecurity Engineer & DevOps — about me, skills, timeline, and CTF achievements."
+>
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-16">
+
+    <!-- Header -->
+    <div class="mb-16">
+      <div class="font-mono text-xs text-[#00ff88] mb-2">// cat about.txt</div>
+      <h1 class="font-mono text-3xl sm:text-4xl font-bold text-[#e2e8f0] mb-6">
+        About Me
+      </h1>
+    </div>
+
+    <!-- Bio section -->
+    <section class="grid grid-cols-1 lg:grid-cols-3 gap-10 mb-20">
+      <!-- Avatar / terminal card -->
+      <div class="lg:col-span-1">
+        <div
+          class="rounded-xl border border-[#2a2a4a] p-6 sticky top-20"
+          style="background: #0f0f1e;"
+        >
+          <!-- ASCII avatar -->
+          <div
+            class="font-mono text-xs text-[#00ff88] leading-tight mb-4 text-center"
+            style="font-size: 0.6rem; text-shadow: 0 0 6px rgba(0,255,136,0.4);"
+          >
+            <pre>
+  ██╗   ██╗
+  ╚██╗ ██╔╝
+   ╚████╔╝
+    ╚██╔╝
+     ██║
+     ╚═╝</pre>
+          </div>
+
+          <div class="text-center mb-4">
+            <div class="font-mono font-bold text-[#e2e8f0] text-lg">Yassine</div>
+            <div class="font-mono text-xs text-[#00ff88]">@omega-coder</div>
+          </div>
+
+          <div class="space-y-2 text-xs font-mono">
+            <div class="flex justify-between">
+              <span class="text-[#4a4a6a]">role</span>
+              <span class="text-[#00d4ff]">Security + DevOps</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-[#4a4a6a]">htb_rank</span>
+              <span class="text-[#9fff00]">Pro Hacker</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-[#4a4a6a]">ctf_solves</span>
+              <span class="text-[#fbbf24]">50+</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-[#4a4a6a]">location</span>
+              <span class="text-[#94a3b8]">Earth</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-[#4a4a6a]">status</span>
+              <span class="text-[#00ff88]">● active</span>
+            </div>
+          </div>
+
+          <div class="mt-5 pt-4 border-t border-[#2a2a4a]">
+            <a
+              href="/contact"
+              class="block text-center font-mono text-xs py-2 rounded-lg transition-all"
+              style="background: #00ff8815; color: #00ff88; border: 1px solid #00ff8840;"
+              onmouseover="this.style.background='#00ff8825'; this.style.borderColor='#00ff88'"
+              onmouseout="this.style.background='#00ff8815'; this.style.borderColor='#00ff8840'"
+            >
+              → get in touch
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bio text -->
+      <div class="lg:col-span-2">
+        <div class="prose prose-invert max-w-none">
+          <p class="text-[#e2e8f0] text-base leading-relaxed mb-4">
+            I'm a Cybersecurity Engineer and DevOps practitioner with a passion for breaking things apart to understand how they work — and then building them back stronger.
+          </p>
+          <p class="text-[#94a3b8] text-base leading-relaxed mb-4">
+            My work lives at the intersection of offensive security and infrastructure engineering. During the day I'm hardening cloud architectures, building CI/CD pipelines, and automating everything I can get my hands on. After hours I'm on HackTheBox, competing in CTFs, or writing about interesting vulnerabilities I've come across.
+          </p>
+          <p class="text-[#94a3b8] text-base leading-relaxed mb-6">
+            I believe the best defenders are the ones who understand offense. That's why I invest time in CTF competitions — they keep the skills sharp and the mindset attacker-first.
+          </p>
+
+          <!-- Terminal quote -->
+          <div
+            class="rounded-lg border border-[#2a2a4a] p-4 font-mono text-sm"
+            style="background: #0f0f1e;"
+          >
+            <span class="text-[#00ff88]">$</span>
+            <span class="text-[#94a3b8]"> echo "</span>
+            <span class="text-[#e2e8f0]">Security is not a product, but a process.</span>
+            <span class="text-[#94a3b8]">" — Bruce Schneier</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Skills section -->
+    <section class="mb-20">
+      <div class="mb-8">
+        <div class="font-mono text-xs text-[#00d4ff] mb-2">// ls -la skills/</div>
+        <h2 class="font-mono text-2xl font-bold text-[#e2e8f0]">Skills & Tools</h2>
+      </div>
+      <SkillsGrid />
+    </section>
+
+    <!-- CTF Achievements -->
+    <section class="mb-20">
+      <div class="mb-8">
+        <div class="font-mono text-xs text-[#a855f7] mb-2">// cat achievements.log</div>
+        <h2 class="font-mono text-2xl font-bold text-[#e2e8f0]">CTF Achievements</h2>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {[
+          { platform: 'HackTheBox', rank: 'Pro Hacker', color: '#9fff00', badge: '🟢', machines: '30+' },
+          { platform: 'AngstromCTF 2019', rank: 'Top 50', color: '#ed8936', badge: '🏆', machines: '5 solves' },
+          { platform: 'INS\'hAck 2019', rank: 'Participant', color: '#f59e0b', badge: '🚩', machines: '3 solves' },
+          { platform: 'Securinets CTF', rank: 'Participant', color: '#a855f7', badge: '🔐', machines: '2 solves' },
+          { platform: 'Hacklab ESGI', rank: 'Participant', color: '#00d4ff', badge: '🛡', machines: '1 solve' },
+          { platform: 'PicoCTF', rank: 'Active', color: '#4299e1', badge: '⚡', machines: 'various' },
+        ].map(item => (
+          <div
+            class="rounded-xl border border-[#2a2a4a] p-5 hover:border-[#3a3a5a] transition-all"
+            style="background: #0f0f1e;"
+          >
+            <div class="flex items-start justify-between mb-3">
+              <span class="text-2xl">{item.badge}</span>
+              <span class="font-mono text-xs" style={`color: ${item.color};`}>{item.machines}</span>
+            </div>
+            <div class="font-mono font-bold text-[#e2e8f0] text-sm mb-1">{item.platform}</div>
+            <div class="font-mono text-xs" style={`color: ${item.color};`}>{item.rank}</div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Timeline -->
+    <section>
+      <div class="mb-8">
+        <div class="font-mono text-xs text-[#00ff88] mb-2">// git log --oneline</div>
+        <h2 class="font-mono text-2xl font-bold text-[#e2e8f0]">Timeline</h2>
+      </div>
+      <Timeline />
+    </section>
+  </div>
+</BaseLayout>

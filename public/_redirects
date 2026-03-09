@@ -1,0 +1,3 @@
+# Cloudflare Pages redirects
+/blog/* /blog/:splat 200
+/writeups/* /writeups/:splat 200

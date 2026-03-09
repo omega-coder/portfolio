@@ -1,0 +1,36 @@
+---
+import { getCollection, render } from 'astro:content';
+import BlogLayout from '../../layouts/BlogLayout.astro';
+
+export async function getStaticPaths() {
+  const writeups = await getCollection('writeups', ({ data }) => !data.draft);
+  return writeups.map(writeup => ({
+    params: { slug: writeup.id },
+    props: { writeup },
+  }));
+}
+
+const { writeup } = Astro.props;
+const { Content } = await render(writeup);
+
+function estimateReadingTime(body: string): number {
+  const words = body?.split(/\s+/).length ?? 0;
+  return Math.max(1, Math.ceil(words / 200));
+}
+
+const readingTime = estimateReadingTime(writeup.body ?? '');
+---
+
+<BlogLayout
+  title={writeup.data.title}
+  description={writeup.data.description}
+  date={writeup.data.date}
+  tags={writeup.data.tags}
+  readingTime={readingTime}
+  platform={writeup.data.platform}
+  difficulty={writeup.data.difficulty}
+  category={writeup.data.category}
+  image={writeup.data.image}
+>
+  <Content />
+</BlogLayout>
