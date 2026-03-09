@@ -21,15 +21,15 @@ const socials = [
   {
     name: 'HackTheBox',
     handle: 'omega-coder',
-    href: 'https://app.hackthebox.com/users/omega-coder',
+    href: 'https://app.hackthebox.com/users/shr00ms',
     color: '#9fff00',
     description: 'CTF machines, challenges, and rank',
     icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24"><path d="M11.994 0L3.5 4.86v9.367l2.215 1.289V6.719l6.279-3.664 6.28 3.664v8.797l2.226-1.289V4.86zm.006 7.227l-6.279 3.664v7.328L11.994 22l6.274-3.781v-7.328zm0 2.21l4.048 2.36v4.453L12 18.6l-4.048-2.35v-4.453z"/></svg>`,
   },
   {
     name: 'Twitter / X',
-    handle: '@omega_coder',
-    href: 'https://x.com/omega_coder',
+    handle: '@shr00mpsy',
+    href: 'https://x.com/shr00mpsy',
     color: '#e2e8f0',
     description: 'Security thoughts, CTF wins, and shitposts',
     icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>`,
@@ -154,8 +154,8 @@ const socials = [
   const emailEl = document.getElementById('email-display');
   if (emailEl) {
     // Reverse-encoded to prevent scraping
-    const parts = ['yassine', 'cherief', 'dev', 'gmail.com'];
-    const email = `${parts[0]}.${parts[1]}@${parts[3]}`;
+    const parts = ['yassine', 'cherief', 'dev', 'outlook.com'];
+    const email = `${parts[0]}${parts[1]}@${parts[3]}`;
 
     let revealed = false;
     emailEl.addEventListener('click', () => {
